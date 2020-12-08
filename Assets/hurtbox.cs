@@ -9,6 +9,9 @@ public class hurtbox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        boss.DealDamage(head);
+        if (other.tag == "Spear" || other.tag == "Sword")
+        {
+            boss.DealDamage(head);
+        }
     }
 }

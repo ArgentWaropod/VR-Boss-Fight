@@ -642,6 +642,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: HeadCut
     m_EventTreshold: 1
+  - m_ConditionMode: 1
+    m_ConditionEvent: STUN
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -4945781443196871601}
   m_Solo: 0
@@ -751,6 +754,12 @@ AnimatorController:
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
   - m_Name: Resolving
+    m_Type: 9
+    m_DefaultFloat: 0
+    m_DefaultInt: 0
+    m_DefaultBool: 0
+    m_Controller: {fileID: 0}
+  - m_Name: STUN
     m_Type: 9
     m_DefaultFloat: 0
     m_DefaultInt: 0
@@ -961,6 +970,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: HeadCut
     m_EventTreshold: 0
+  - m_ConditionMode: 1
+    m_ConditionEvent: STUN
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: -3152244817599664257}
   m_Solo: 0
@@ -1042,6 +1054,9 @@ AnimatorStateTransition:
   - m_ConditionMode: 6
     m_ConditionEvent: HeadCut
     m_EventTreshold: 2
+  - m_ConditionMode: 1
+    m_ConditionEvent: STUN
+    m_EventTreshold: 0
   m_DstStateMachine: {fileID: 0}
   m_DstState: {fileID: 3973276327306714004}
   m_Solo: 0

@@ -6,9 +6,14 @@ public class Projectile : MonoBehaviour
 {
     public Rigidbody rb;
 
+    private void Start()
+    {
+        Destroy(gameObject, 10);
+    }
+
     private void Update()
     {
-        rb.velocity = transform.forward * 0.5f;
+        rb.velocity = transform.right * 3f;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -16,6 +21,8 @@ public class Projectile : MonoBehaviour
         if (other.tag == "Player")
         {
             other.GetComponent<Player>().DealDamage();
+
         }
+        Destroy(gameObject);
     }
 }

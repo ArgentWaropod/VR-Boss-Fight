@@ -6,6 +6,11 @@ public class spear : MonoBehaviour
 {
     public bool hasFire = false;
     public GameObject fireEffect;
+
+    private void Start()
+    {
+        fireEffect.SetActive(false);
+    }
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Fire")

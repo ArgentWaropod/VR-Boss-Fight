@@ -8,6 +8,18 @@ public class slicebox : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        boss.isHeadCut = true;
+        if (other.tag == "Sword")
+        {
+            Debug.Log("Slice and Dice");
+            boss.isHeadCut = true;
+        }
+        else if (other.tag == "Spear")
+        {
+            if (other.gameObject.GetComponent<spear>().hasFire)
+            {
+                Debug.Log("Toasty");
+                boss.BurnStump();
+            }
+        }
     }
 }

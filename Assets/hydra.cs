@@ -15,7 +15,7 @@ public class hydra : MonoBehaviour
     int LHeadHealth, RHeadHealth, CHeadHealth;
     bool isStumpBurned = false, inAttack = false, CHeadAlive = true, LHeadAlive = true, RHeadAlive = true;
     public bool stunned = false, isHeadCut = false, playerIsOnPlatform;
-    States hydraStates;
+    public States hydraStates;
 
     public void Start()
     {
@@ -46,6 +46,7 @@ public class hydra : MonoBehaviour
             {
                 if (isHeadCut)
                 {
+                    Debug.Log("NoHeadLol");
                     CHead.SetActive(false);
                     CHeadStump.SetActive(true);
                 }
@@ -113,24 +114,39 @@ public class hydra : MonoBehaviour
                 CHeadHealth -= 1;
                 if (CHeadHealth <= 0)
                 {
+                    Debug.Log("STUNNED");
+                    ani.SetTrigger("STUN");
+                    ani.SetInteger("HeadCut", 0);
                     hydraStates = States.CSTUN;
                     inAttack = false;
+                    Stun();
                 }
                 break;
             case 1:
                 LHeadHealth -= 1;
                 if (LHeadHealth <= 0)
                 {
+
+                    Debug.Log("STUNNED");
+
+                    ani.SetTrigger("STUN");
+                    ani.SetInteger("HeadCut", 1);
                     hydraStates = States.LSTUN;
                     inAttack = false;
+                    Stun();
                 }
                 break;
             case 2:
                 RHeadHealth -= 1;
                 if (RHeadHealth <= 0)
                 {
+
+                    ani.SetTrigger("STUN");
+                    ani.SetInteger("HeadCut", 2);
+                    Debug.Log("STUNNED");
                     hydraStates = States.RSTUN;
                     inAttack = false;
+                    Stun();
                 }
                 break;
             default:
@@ -146,7 +162,7 @@ public class hydra : MonoBehaviour
         for (int i = 0; i < spitpoints.Length; i++)
         {
             Instantiate(Projectile, spitpoints[i].transform.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.25f);
         }
         inAttack = false;
         yield return null;
@@ -163,17 +179,6 @@ public class hydra : MonoBehaviour
         inAttack = true;
         ani.SetTrigger("BiteAttack");
         yield return new WaitForSeconds(3.15f);
-
-        inAttack = false;
-        returnToIdle();
-        yield return null;
-    }
-
-    IEnumerator StompAttack()
-    {
-        inAttack = true;
-        ani.SetTrigger("StompAttack");
-        yield return new WaitForSeconds(3f);
         for (int i = 0; i < 3; i++)
         {
             RaycastHit hit;
@@ -188,12 +193,29 @@ public class hydra : MonoBehaviour
         }
         yield return new WaitForSeconds(.75f);
         inAttack = false;
-        returnToIdle();
+        if (!stunned)
+        {
+            returnToIdle();
+        }
+        yield return null;
+    }
+
+    IEnumerator StompAttack()
+    {
+        inAttack = true;
+        ani.SetTrigger("StompAttack");
+        yield return new WaitForSeconds(3f);
+        inAttack = false;
+        if (!stunned)
+        {
+            returnToIdle();
+        }
         yield return null;
     }
 
     public void returnToIdle()
     {
+        Debug.Log("Returning to Idle");
         hydraStates = States.IDLE;
         inAttack = false;
         isStumpBurned = false;
@@ -209,33 +231,39 @@ public class hydra : MonoBehaviour
 
     public void Stun()
     {
+        Debug.Log("STUN");
         inAttack = true;
+        stunned = true;
         CHit.enabled = false;
         LHit.enabled = false;
         RHit.enabled = false;
         CSlice.enabled = true;
         LSlice.enabled = true;
         RSlice.enabled = true;
-        Invoke("Resolve", 15f);
+        Invoke("Resolve", 20f);
     }
 
     public void Resolve()
     {
+        stunned = false;
+        Debug.Log("Resolving Stun");
         if (hydraStates == States.CSTUN)
         {
             if (CHead.activeSelf == true)
             {
                 ani.SetBool("IsHeadCut", false);
-                ani.SetBool("IsStumpBurned", false);
+                ani.SetBool("IsHeadBurned", false);
                 ani.SetTrigger("Resolving");
                 Invoke("returnToIdle", 1.45f);
+                CHeadHealth = 3;
             }
             else if (CHead.activeSelf == false && isStumpBurned == false)
             {
                 ani.SetBool("IsHeadCut", true);
-                ani.SetBool("IsStumpBurned", false);
+                ani.SetBool("IsHeadBurned", false);
                 ani.SetTrigger("Resolving");
                 Invoke("returnToIdle", 1.983f);
+                CHeadHealth = 3;
             }
             else
             {
@@ -247,7 +275,7 @@ public class hydra : MonoBehaviour
                 else
                 {
                     ani.SetBool("IsHeadCut", true);
-                    ani.SetBool("IsStumpBurned", true);
+                    ani.SetBool("IsHeadBurned", true);
                     ani.SetTrigger("Resolving");
                     CHeadAlive = false;
                     Invoke("returnToIdle", 1.983f);
@@ -259,16 +287,18 @@ public class hydra : MonoBehaviour
             if (LHead.activeSelf == true)
             {
                 ani.SetBool("IsHeadCut", false);
-                ani.SetBool("IsStumpBurned", false);
+                ani.SetBool("IsHeadBurned", false);
                 ani.SetTrigger("Resolving");
                 Invoke("returnToIdle", 1.45f);
+                LHeadHealth = 3;
             }
             else if (LHead.activeSelf == false && isStumpBurned == false)
             {
                 ani.SetBool("IsHeadCut", true);
-                ani.SetBool("IsStumpBurned", false);
+                ani.SetBool("IsHeadBurned", false);
                 ani.SetTrigger("Resolving");
                 Invoke("returnToIdle", 0.7f);
+                LHeadHealth = 3;
             }
             else
             {
@@ -280,7 +310,7 @@ public class hydra : MonoBehaviour
                 else
                 {
                     ani.SetBool("IsHeadCut", true);
-                    ani.SetBool("IsStumpBurned", true);
+                    ani.SetBool("IsHeadBurned", true);
                     ani.SetTrigger("Resolving");
                     LHeadAlive = false;
                     Invoke("returnToIdle", 2.1f);
@@ -292,16 +322,18 @@ public class hydra : MonoBehaviour
             if (RHead.activeSelf == true)
             {
                 ani.SetBool("IsHeadCut", false);
-                ani.SetBool("IsStumpBurned", false);
+                ani.SetBool("IsHeadBurned", false);
                 ani.SetTrigger("Resolving");
                 Invoke("returnToIdle", 1.45f);
+                RHeadHealth = 3;
             }
             else if (RHead.activeSelf == false && isStumpBurned == false)
             {
                 ani.SetBool("IsHeadCut", true);
-                ani.SetBool("IsStumpBurned", false);
+                ani.SetBool("IsHeadBurned", false);
                 ani.SetTrigger("Resolving");
                 Invoke("returnToIdle", 2.217f);
+                RHeadHealth = 3;
             }
             else
             {
@@ -313,7 +345,7 @@ public class hydra : MonoBehaviour
                 else
                 {
                     ani.SetBool("IsHeadCut", true);
-                    ani.SetBool("IsStumpBurned", false);
+                    ani.SetBool("IsHeadBurned", false);
                     ani.SetTrigger("Resolving");
                     RHeadAlive = false;
                     Invoke("returnToIdle", 2f);
