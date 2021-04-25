@@ -14,7 +14,7 @@ public class hydra : MonoBehaviour
     public GameObject[] spitpoints;
     int LHeadHealth, RHeadHealth, CHeadHealth;
     bool isStumpBurned = false, inAttack = false, CHeadAlive = true, LHeadAlive = true, RHeadAlive = true;
-    public bool stunned = false, isHeadCut = false, playerIsOnPlatform;
+    public bool stunned = false, isHeadCut = false, playerIsOnPlatform, LheadGone, MheadGone, RheadGone;
     public States hydraStates;
 
     public void Start()
@@ -46,25 +46,21 @@ public class hydra : MonoBehaviour
             {
                 if (isHeadCut)
                 {
-                    Debug.Log("NoHeadLol");
-                    CHead.SetActive(false);
-                    CHeadStump.SetActive(true);
+                    CHeadAlive = false;
                 }
             }
             else if (hydraStates == States.LSTUN)
             {
                 if (isHeadCut)
                 {
-                    LHead.SetActive(false);
-                    LHeadStump.SetActive(true);
+                    LHeadAlive = false;
                 }
             }
             else if (hydraStates == States.RSTUN)
             {
                 if (isHeadCut)
                 {
-                    RHead.SetActive(false);
-                    RHeadStump.SetActive(true);
+                    RHeadAlive = true;
                 }
             }
             else
@@ -99,6 +95,21 @@ public class hydra : MonoBehaviour
                     }
                 }
             }
+        }
+        if (!LHeadAlive)
+        {
+            CHead.SetActive(false);
+            CHeadStump.SetActive(true);
+        }
+        if (!CHeadAlive)
+        {
+            LHead.SetActive(false);
+            LHeadStump.SetActive(true);
+        }
+        if (!RHeadAlive)
+        {
+            RHead.SetActive(false);
+            RHeadStump.SetActive(true);
         }
     }
 
